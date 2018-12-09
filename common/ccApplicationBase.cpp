@@ -38,39 +38,42 @@
 #include "ccTranslationManager.h"
 
 
-void ccApplicationBase::init()
+void ccApplicationBase::init(bool noOpenGLSupport)
 {
-	//See http://doc.qt.io/qt-5/qopenglwidget.html#opengl-function-calls-headers-and-qopenglfunctions
-	/** Calling QSurfaceFormat::setDefaultFormat() before constructing the QApplication instance is mandatory
-		on some platforms (for example, OS X) when an OpenGL core profile context is requested. This is to
-		ensure that resource sharing between contexts stays functional as all internal contexts are created
-		using the correct version and profile.
-	**/
+	if (!noOpenGLSupport)
 	{
-		QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+		//See http://doc.qt.io/qt-5/qopenglwidget.html#opengl-function-calls-headers-and-qopenglfunctions
+		/** Calling QSurfaceFormat::setDefaultFormat() before constructing the QApplication instance is mandatory
+			on some platforms (for example, OS X) when an OpenGL core profile context is requested. This is to
+			ensure that resource sharing between contexts stays functional as all internal contexts are created
+			using the correct version and profile.
+		**/
+		{
+			QSurfaceFormat format = QSurfaceFormat::defaultFormat();
 
-		format.setSwapBehavior( QSurfaceFormat::DoubleBuffer );
-		format.setStencilBufferSize( 0 );
+			format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+			format.setStencilBufferSize(0);
 
 #ifdef CC_GL_WINDOW_USE_QWINDOW
-		format.setStereo( true );
+			format.setStereo(true);
 #endif
 
 #ifdef Q_OS_MAC
-		format.setVersion( 2, 1 );	// must be 2.1 - see ccGLWindow::functions()
-		format.setProfile( QSurfaceFormat::CoreProfile );
+			format.setVersion(2, 1);	// must be 2.1 - see ccGLWindow::functions()
+			format.setProfile(QSurfaceFormat::CoreProfile);
 #endif
 
 #ifdef QT_DEBUG
-		format.setOption( QSurfaceFormat::DebugContext, true );
+			format.setOption(QSurfaceFormat::DebugContext, true);
 #endif
 
-		QSurfaceFormat::setDefaultFormat( format );
-	}
+			QSurfaceFormat::setDefaultFormat(format);
+		}
 
-	// The 'AA_ShareOpenGLContexts' attribute must be defined BEFORE the creation of the Q(Gui)Application
-	// DGM: this is mandatory to enable exclusive full screen for ccGLWidget (at least on Windows)
-	QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts );
+		// The 'AA_ShareOpenGLContexts' attribute must be defined BEFORE the creation of the Q(Gui)Application
+		// DGM: this is mandatory to enable exclusive full screen for ccGLWidget (at least on Windows)
+		QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+	}
 }
 
 ccApplicationBase::ccApplicationBase(int &argc, char **argv, const QString &version)
@@ -94,11 +97,13 @@ ccApplicationBase::ccApplicationBase(int &argc, char **argv, const QString &vers
 	// See https://doc.qt.io/qt-5/qcoreapplication.html#locale-settings
 	setlocale( LC_NUMERIC, "C" );
 #endif
-
+	
 	ccGLWindow::setShaderPath( m_ShaderPath );
 	ccPluginManager::setPaths( m_PluginPaths );
-
-	loadTranslations();
+	
+	ccTranslationManager::get().registerTranslatorFile( QStringLiteral( "qt" ), m_TranslationPath );
+	ccTranslationManager::get().registerTranslatorFile( QStringLiteral( "CloudCompare" ), m_TranslationPath );
+	ccTranslationManager::get().loadTranslations();
 	
 	connect( this, &ccApplicationBase::aboutToQuit, [=](){ ccMaterial::ReleaseTextures(); } );
 }
@@ -224,28 +229,5 @@ void ccApplicationBase::setupPaths()
 		{
 			m_PluginPaths << path;
 		}
-	}
-}
-
-void ccApplicationBase::loadTranslations()
-{	
-	const QString  &cLangFromPrefs = ccTranslationManager::languagePref();
- 
-	auto qtTranslator = new QTranslator( this );
- 
-	bool  loaded = qtTranslator->load( QLocale( cLangFromPrefs ), QStringLiteral( "qt" ), QStringLiteral( "_" ), m_TranslationPath );
- 
-	if ( loaded )
-	{ 
-	   installTranslator( qtTranslator );
-	}
- 
-	auto  appTranslator = new QTranslator( this );
- 
-	loaded = appTranslator->load( QLocale( cLangFromPrefs ), QStringLiteral( "CloudCompare" ), QStringLiteral( "_" ), m_TranslationPath );
- 
-	if ( loaded )
-	{ 
-	   installTranslator( appTranslator );
 	}
 }

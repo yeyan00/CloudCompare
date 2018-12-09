@@ -58,7 +58,6 @@ class ccRecentFiles;
 class ccSectionExtractionTool;
 class ccStdPluginInterface;
 class ccTracePolylineTool;
-class ccTranslationManager;
 
 namespace Ui {
 	class MainWindow;
@@ -273,10 +272,8 @@ private slots:
 	void doActionSetSFAsCoord();
 	void doActionInterpolateScalarFields();
 
-	void doComputeDensity();
-	void doComputeCurvature();
+	void doComputeGeometricFeature();
 	void doActionSFGradient();
-	void doComputeRoughness();
 	void doRemoveDuplicatePoints();
 	void doSphericalNeighbourhoodExtractionTest(); //DGM TODO: remove after test
 	void doCylindricalNeighbourhoodExtractionTest(); //DGM TODO: remove after test
@@ -597,8 +594,6 @@ private:
 	/*** plugins ***/
 	//! Manages plugins - menus, toolbars, and the about dialog
 	ccPluginUIManager	*m_pluginUIManager;
-	
-	ccTranslationManager	*m_TranslationManager;
 };
 
 #endif
