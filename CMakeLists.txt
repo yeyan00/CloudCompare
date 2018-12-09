@@ -7,6 +7,7 @@ project( CloudCompareProjects )
 include( cmake/CMakePolicies.cmake )
 include( cmake/CMakeSetCompilerOptions.cmake )
 
+set(PROJECT_INCLUDE ${PROJECT_SOURCE_DIR})
 # Default debug suffix for libraries.
 set( CMAKE_DEBUG_POSTFIX "d" )
 
@@ -109,3 +110,4 @@ if( ${OPTION_BUILD_CCVIEWER} )
 endif()
 
 cmake_policy(POP)
+
