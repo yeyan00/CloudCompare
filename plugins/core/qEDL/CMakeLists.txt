@@ -13,6 +13,10 @@ if (INSTALL_QEDL_PLUGIN)
     set( CC_SHADER_FOLDER EDL )
     include( ../../CMakePluginTpl.cmake )
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_INCLUDE}/build/bin/plugins)
-    set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_INCLUDE}/build/binplugins)
-endif()
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_INCLUDE}/build/bin/Debug/plugins)
+    set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_INCLUDE}/build/bin/Release/plugins)
+    set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG  ${PROJECT_INCLUDE}/build/bin/Debug/plugins)
+    set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_INCLUDE}/build/bin/Release/plugins)
+
+    endif()

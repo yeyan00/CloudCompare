@@ -27,4 +27,10 @@ if( ${OPTION_BUILD_CCVIEWER} )
 	include( ../ExportPCLDlls.cmake )
 	export_PCL_dlls( ${CCVIEWER_DEST_FOLDER} )
 
+
 endif()
+
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_INCLUDE}/build/bin/Debug/plugins)
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_INCLUDE}/build/bin/Release/plugins)
+set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG  ${PROJECT_INCLUDE}/build/bin/Debug/plugins)
+set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_INCLUDE}/build/bin/Release/plugins)
